@@ -1,5 +1,6 @@
 # mongoshake_db_comparison
-本脚本来自https://github.com/alibaba/MongoShake/,在comparison.py的基础上做了些优化
+本脚本来自https://github.com/alibaba/MongoShake/
+在comparison.py的基础上做了些优化
 
 
 最近在用shake做迁移mongo集群到集群，源集群不能停，用comparison.py脚本做数据校验，发现脚本一遇到数据不一致就提示然后退出了。
