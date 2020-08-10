@@ -136,25 +136,34 @@ def check(src, dst):
 		srcColl_cnt_all = srcColl.find({"dropped": False}).count()
 	        if srcColl_cnt_all != dstColl_cnt_all:
 		    log_warnning("DIFF => collection [%s] shard key record count not equals" % (coll))
-		    log_warnning("srcdb_shard_key.count: %d <===> dstdb_shard_key.count: %d" % (srcColl_cnt_all,dstColl_cnt_all))
+		    if srcColl_cnt_all < dstColl_cnt_all:
+			log_warnning("srcdb_shard_key.count: %d < dstdb_shard_key.count: %d" % (srcColl_cnt_all,dstColl_cnt_all))
+		    else:
+		    	log_warnning("srcdb_shard_key.count: %d > dstdb_shard_key.count: %d" % (srcColl_cnt_all,dstColl_cnt_all))
 		else:
 		    log_info("EQUL => collection [%s] shard key record count equals" % (coll))
 		for db in dstDbNames:
 		    if db in configure[EXCLUDE_DBS] or db == 'config':
             		log_warnning("IGNR => ignore database [%s]" % db)
             		continue
-		    srcColl_cnt = srcColl.find({'_id':{"$regex": db},"dropped": False}).count()
-		    dstColl_cnt = dstColl.find({'_id':{"$regex": db},"dropped": False}).count()
+		    srcColl_cnt = srcColl.find({'_id':{"$regex": "^db.*$"},"dropped": False}).count()
+		    dstColl_cnt = dstColl.find({'_id':{"$regex": "^db.*$"},"dropped": False}).count()
 	            if srcColl_cnt != dstColl_cnt:
 		        log_error("DIFF =>database [%s] shard key record count not equals" % (db))
-		        log_error("srcdb_shard_key.count: %d <===> dstdb_shard_key.count: %d" % (srcColl_cnt,dstColl_cnt))
+			if srcColl_cnt < dstColl_cnt:
+			    log_error("srcdb_shard_key.count: %d < dstdb_shard_key.count: %d" % (srcColl_cnt,dstColl_cnt))
+		        else: 
+			    log_error("srcdb_shard_key.count: %d > dstdb_shard_key.count: %d" % (srcColl_cnt,dstColl_cnt))
 		    else:
 		        log_info("EQUL => database[%s] shard key record count equals" % (db))
 	    else:
                 if srcColl.count() != dstColl.count():
 	            log_error("DIFF => collection [%s] record count not equals" % (coll))
-	            log_error("srcColl.count: %d <===> dstColl.count: %d " % (srcColl.count(),dstColl.count()))
-	            continue
+		    if srcColl.count() < dstColl.count():
+	                log_error("srcColl.count: %d < dstColl.count: %d " % (srcColl.count(),dstColl.count()))
+	            else:
+			log_error("srcColl.count: %d > dstColl.count: %d " % (srcColl.count(),dstColl.count()))
+		    continue
                     # return False
                 else:
                     log_info("EQUL => collection [%s] record count equals" % (coll))
