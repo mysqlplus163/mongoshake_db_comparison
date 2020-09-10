@@ -220,11 +220,12 @@ def data_comparison(srcColl, dstColl,coll, mode):
             migrated = dstColl.find_one(doc["_id"])
 	    if coll == 'collections':
 		src_doc=dict((k,v) for k,v in doc.items() if k in ["_id","unique","dropped","key"] and doc["dropped"] != True)
-		dst_migrated=dict((k,v) for k,v in migrated.items() if k in ["_id","unique","dropped","key"] and migrated["dropped"] != True)	
-		if src_doc != dst_migrated:
-		    log_error("DIFF => src_record[%s]" % (src_doc))
-		    log_error("DIFF => dst_record[%s]" % (dst_migrated))
-    		    #return False
+		if migrated:
+		    dst_migrated=dict((k,v) for k,v in migrated.items() if k in ["_id","unique","dropped","key"] and migrated["dropped"] != True)	
+		    if src_doc != dst_migrated:
+		        log_error("DIFF => src_record[%s]" % (src_doc))
+		        log_error("DIFF => dst_record[%s]" % (dst_migrated))
+    		        #return False
 	    else:
             # both origin and migrated bson is Map . so use ==
                 if doc != migrated:
