@@ -14,6 +14,8 @@
 1、清理源库的孤儿文档。具体步骤参考官方文档
 2、关闭源库的balancer
 
+支持--includeDbs=db1,db2  --includeCollections=colle1,colle2  选项，--includeDbs= --includeCollections=  内的总数对比使用aggregate函数计算count，用于校验数据时使用count()对比存在的误差不精准问题。
+
 否则后面用脚本校验数据时会发现数据不一致。
 
 注：用于源/目标集群校验用户,需要有admin,config和其他校验库的读权限，使用方法看脚本里面有写
